@@ -1,34 +1,18 @@
 //Hosted from https://replit.com/@FranklinUme/SmiteBot#index.js
 //Pinged from https://uptimerobot.com/dashboard#787893643
 
-
-
 //Setup Bot
 const { Client, MessageEmbed } = require("discord.js");
 require("dotenv").config();
-
-
-
-
-
 
 //Import Data
 const itemData = require("./items");
 const godData = require("./gods");
 
-
-
-
-
-
-
-
 //Functions
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
-
-
 
 function generateRandomGod() {
   let gods = [];
@@ -38,15 +22,11 @@ function generateRandomGod() {
   return randomGod;
 }
 
-
-
 function generateImage(godName) {
   let god = godName;
   god = god.replace(/\s+/g, "-").toLowerCase();
   return `https://webcdn.hirezstudios.com/smite/god-cards/${god}.jpg`;
 }
-
-
 
 function generateRandomBuild(godName, type) {
   let build = "";
@@ -59,16 +39,14 @@ function generateRandomBuild(godName, type) {
   return build;
 }
 
-
-
 function getUsableItems(type) {
   let finalItems = [];
 
   for (let i = 0; i < itemData.Items.length; i++) {
     if (
       itemData.Items[i].tier === 3 &&
-      (itemData.Items[i].type === type || itemData.Items[i].type === "Both")) 
-    {
+      (itemData.Items[i].type === type || itemData.Items[i].type === "Both")
+    ) {
       finalItems.push(itemData.Items[i].name);
     }
   }
@@ -76,38 +54,35 @@ function getUsableItems(type) {
 }
 
 function generateRandomStarter(type) {
-    let finalItems = []; 
-    for (let i = 0; i < itemData.Items.length; i++) {
-      if (
-        itemData.Items[i].tier === 2 &&
-        itemData.Items[i].starter === true &&
-        (itemData.Items[i].type === type || itemData.Items[i].type === "Both")
-      ) 
-      {
-        finalItems.push(itemData.Items[i].name);
-      }
+  let finalItems = [];
+  for (let i = 0; i < itemData.Items.length; i++) {
+    if (
+      itemData.Items[i].tier === 2 &&
+      itemData.Items[i].starter === true &&
+      (itemData.Items[i].type === type || itemData.Items[i].type === "Both")
+    ) {
+      finalItems.push(itemData.Items[i].name);
     }
-    let chosen = shuffle(finalItems)
-    return chosen[0];
   }
+  let chosen = shuffle(finalItems);
+  return chosen[0];
+}
 
-  function generateRandomBoots(type) {
-    let finalItems = [];
-  
-    for (let i = 0; i < itemData.Items.length; i++) {
-      if (
-        itemData.Items[i].tier === 3 &&
-        itemData.Items[i].shoes === true &&
-        (itemData.Items[i].type === type || itemData.Items[i].type === "Both")
-      ) {
-        finalItems.push(itemData.Items[i].name);
-      }
+function generateRandomBoots(type) {
+  let finalItems = [];
+
+  for (let i = 0; i < itemData.Items.length; i++) {
+    if (
+      itemData.Items[i].tier === 3 &&
+      itemData.Items[i].shoes === true &&
+      (itemData.Items[i].type === type || itemData.Items[i].type === "Both")
+    ) {
+      finalItems.push(itemData.Items[i].name);
     }
-    let chosen = shuffle(finalItems)
-    return chosen[0];
   }
-
-
+  let chosen = shuffle(finalItems);
+  return chosen[0];
+}
 
 function shuffle(array) {
   var currentIndex = array.length,
@@ -123,8 +98,16 @@ function shuffle(array) {
   return array;
 }
 
+function generateRandomGodOfClass(godClass) {
+  let gods = [];
+  for (let i = 0; i < godData.Gods.length; i++) {
+    if (godData.Gods[i].type === godClass) gods.push(godData.Gods[i].name);
+  }
 
-
+  let randomNum = getRandomInt(gods.length - 1);
+  let randomGod = gods[randomNum];
+  return randomGod;
+}
 
 //Initialise BOT
 const client = new Client();
@@ -133,33 +116,90 @@ client.on("ready", () => {
   console.log("Bot is ready");
 });
 
-
-
-
-
 //BOT Commands
 client.on("message", (msg) => {
+  let godOfClass;
+  let godOfClassImg;
+  let embedgodOfClass;
+
   switch (msg.content) {
     case "!info":
       msg.reply(
-          "I make randomm builds init.\n To get a random build, type '!build'\n If you just want a God, type '!god'");
+        "I make randomm builds init.\n To get a random build, type '!build'\n If you just want a God, type '!god'"
+      );
       break;
 
     case "!god":
-        let god2 = generateRandomGod();
-        let godImg2 = generateImage(god2);
-        const embed2 = new MessageEmbed()
+      let god2 = generateRandomGod();
+      let godImg2 = generateImage(god2);
+      const embed2 = new MessageEmbed()
         .setTitle("Your Random God")
-        .setColor(0xff0000)
+        .setColor(0xa1a1a1)
         .setDescription(msg.author.tag + " is " + god2 + "\n")
-        .setImage(godImg2)
+        .setImage(godImg2);
       msg.reply(embed2);
+      break;
+
+    case "!mage":
+      godOfClass = generateRandomGodOfClass("Mage");
+      godOfClassImg = generateImage(godOfClass);
+      embedgodOfClass = new MessageEmbed()
+        .setTitle("Your Random God")
+        .setColor(0xa1a1a1)
+        .setDescription(msg.author.tag + " is " + godOfClass + "\n")
+        .setImage(godOfClassImg);
+      msg.reply(embedgodOfClass);
+      break;
+
+    case "!hunter":
+      godOfClass = generateRandomGodOfClass("Hunter");
+      godOfClassImg = generateImage(godOfClass);
+      embedgodOfClass = new MessageEmbed()
+        .setTitle("Your Random God")
+        .setColor(0xa1a1a1)
+        .setDescription(msg.author.tag + " is " + godOfClass + "\n")
+        .setImage(godOfClassImg);
+      msg.reply(embedgodOfClass);
+      break;
+
+    case "!assassin":
+      godOfClass = generateRandomGodOfClass("Assassin");
+      godOfClassImg = generateImage(godOfClass);
+      embedgodOfClass = new MessageEmbed()
+        .setTitle("Your Random God")
+        .setColor(0xa1a1a1)
+        .setDescription(msg.author.tag + " is " + godOfClass + "\n")
+        .setImage(godOfClassImg);
+      msg.reply(embedgodOfClass);
+      break;
+
+    case "!warrior":
+      godOfClass = generateRandomGodOfClass("Warrior");
+      godOfClassImg = generateImage(godOfClass);
+      embedgodOfClass = new MessageEmbed()
+        .setTitle("Your Random God")
+        .setColor(0xa1a1a1)
+        .setDescription(msg.author.tag + " is " + godOfClass + "\n")
+        .setImage(godOfClassImg);
+      msg.reply(embedgodOfClass);
+      break;
+
+    case "!guardian":
+      godOfClass = generateRandomGodOfClass("Guardian");
+      godOfClassImg = generateImage(godOfClass);
+      embedgodOfClass = new MessageEmbed()
+        .setTitle("Your Random God")
+        .setColor(0xa1a1a1)
+        .setDescription(msg.author.tag + " is " + godOfClass + "\n")
+        .setImage(godOfClassImg);
+      msg.reply(embedgodOfClass);
       break;
 
     case "!build":
       let god = generateRandomGod();
       let type = "";
-      for (let i = 0; i < godData.Gods.length; i++) if (godData.Gods[i].name === god) type = godData.Gods[i].powerType;
+      for (let i = 0; i < godData.Gods.length; i++)
+        if (godData.Gods[i].name === god) type = godData.Gods[i].powerType;
       let godImg = generateImage(god);
       let build = generateRandomBuild(god, type);
       let starter = generateRandomStarter(type);
